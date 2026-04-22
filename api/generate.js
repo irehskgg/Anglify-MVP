@@ -23,11 +23,21 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    // 🔥 DEBUG LINE (IMPORTANT)
+    console.log("Claude response:", data);
+
+    if (!response.ok) {
+      return res.status(500).json({
+        error: data.error || "Claude API failed"
+      });
+    }
+
     res.status(200).json({
       text: data.content?.[0]?.text || "No response"
     });
 
   } catch (error) {
-    res.status(500).json({ error: "API failed" });
+    console.error(error);
+    res.status(500).json({ error: "Server crashed" });
   }
 }
